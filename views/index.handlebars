@@ -1,0 +1,83 @@
+<h1>Burgers!</h1>
+
+<h2>Burger is ready!</h2>
+
+<ul>
+  {{#each burgers}} {{#unless devoured}}
+  <li>
+    <p>
+      {{this.id}}. {{this.burger_name}}
+
+      <button data-burgerid="{{this.id}}" class="devoir">Eat me!!</button>
+      <textarea type="text" name="user"></textarea>
+    </p>
+  </li>
+  {{/unless}} {{/each}}
+</ul>
+
+<h2>Burger was devoured!</h2>
+<ul>
+  {{#each burgers}} {{#if devoured}}
+  <p>
+    {{this.id}}.{{this.burger_name}}.{{this.client_name}}
+  </p>
+  {{/if}} {{/each}}
+</ul>
+
+<h2>Create a Burger</h2>
+<form id="createBurger" class="button-size" action="POST">
+  <textarea type="text" name="burger"></textarea>
+  <button type="submit">Submit order!</button>
+</form>
+
+<script type="text/javascript">
+
+  $(function () {
+    $(".devoir").on("click", function (event) {
+      var id = $(this).data("burgerid");
+      var client_name = $("#createBurger [name=user]").val();
+
+      var state = {
+        devoured: true,
+        client_name: client_name
+      };
+
+      // Send the PUT request.
+      $.ajax("/api/burgers/" + id, {
+        type: "PUT",
+        data: state
+      }).then(
+        function () {
+          console.log("changed sleep to", state);
+          // Reload the page to get the updated list
+          location.reload();
+        }
+      );
+    });
+
+    $("#createBurger").on("submit", function (event) {
+      // Make sure to preventDefault on a submit event.
+      event.preventDefault();
+
+      var newBurger = {
+        burger_name: $("#createBurger [name=burger]").val().trim(),
+
+        devoir: false
+      };
+      console.log("object in the handlebars" + newBurger.burger_name, newBurger.devoir);
+      // Send the POST request.
+      $.ajax("/api/burgers", {
+        type: "POST",
+        data: newBurger
+      }).then(
+        function () {
+          console.log("created new burger");
+          // Reload the page to get the updated list
+          location.reload();
+        }
+      );
+    });
+  });
+
+
+</script>
