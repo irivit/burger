@@ -9,7 +9,7 @@
       {{this.id}}. {{this.burger_name}}
 
       <button data-burgerid="{{this.id}}" class="devoir">Eat me!!</button>
-      <textarea type="text" name="user"></textarea>
+      <textarea id= "client_name" type="text" name="client_name"></textarea>
     </p>
   </li>
   {{/unless}} {{/each}}
@@ -19,7 +19,7 @@
 <ul>
   {{#each burgers}} {{#if devoured}}
   <p>
-    {{this.id}}.{{this.burger_name}}.{{this.client_name}}
+    {{this.id}}.{{this.burger_name}}. {{this.client_name}}
   </p>
   {{/if}} {{/each}}
 </ul>
@@ -30,25 +30,29 @@
   <button type="submit">Submit order!</button>
 </form>
 
+
+
 <script type="text/javascript">
 
   $(function () {
     $(".devoir").on("click", function (event) {
-      var id = $(this).data("burgerid");
-      var client_name = $("#createBurger [name=user]").val();
 
+      console.log("estoy dentro del boton devorar");
+      var id = $(this).data("burgerid");
+      var client_name = $("#client_name").val();
+      console.log("estoy en boton este es el nombre del cliente " + client_name);
       var state = {
         devoured: true,
         client_name: client_name
       };
-
+      console.log("nombre del cliente en el on=bjeto state" +state)
       // Send the PUT request.
       $.ajax("/api/burgers/" + id, {
         type: "PUT",
         data: state
       }).then(
         function () {
-          console.log("changed sleep to", state);
+          console.log("estado cambio a devorada", state);
           // Reload the page to get the updated list
           location.reload();
         }
@@ -62,9 +66,9 @@
       var newBurger = {
         burger_name: $("#createBurger [name=burger]").val().trim(),
 
-        devoir: false
+        devoured: false
       };
-      console.log("object in the handlebars" + newBurger.burger_name, newBurger.devoir);
+      console.log("object in the handlebars" + newBurger.burger_name, newBurger.devoured);
       // Send the POST request.
       $.ajax("/api/burgers", {
         type: "POST",
