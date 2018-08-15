@@ -35,7 +35,6 @@ router.put("/api/burgers/:id", function(req, res) {
   console.log(res);
 
   burger.update({
-    client_name: req.body.client_name,
     devoured: req.body.devoured  
   }, condition, function(result) {
     if (result.changedRows == 0) {
